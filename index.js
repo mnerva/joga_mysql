@@ -34,6 +34,29 @@ con.connect(function(err) {
 	console.log("Connected to joga_mysql db")
 })
 
+// show author's articles
+app.get('/author/:author_id', (req, res) => {
+	let query = `SELECT * FROM article WHERE author_id="${req.params.author_id}"`
+	let articles
+	con.query(query, (err, result) => {
+		if (err) throw err;
+		articles = result
+		console.log(articles)
+		query = `SELECT * FROM author WHERE id="${req.params.author_id}"`
+		let author
+		con.query(query, (err, result) => {
+			if (err) throw err;
+			author = result
+			console.log(author)
+			res.render('author', {
+				author: author,
+				articles: articles
+			})
+		})
+	})
+})
+
+
 // show all articles - index page
 app.get('/', (req, res) => {
 	let query = "SELECT * FROM article";
